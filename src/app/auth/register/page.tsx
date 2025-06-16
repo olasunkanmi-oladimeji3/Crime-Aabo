@@ -50,7 +50,7 @@ export default function RegisterPage() {
       return
     }
     // Registration successful
-     router.push("/dashboard")
+     router.push("/auth/confirm-email")
 
     setIsLoading(false)
     // Redirect to dashboard after successful registration
