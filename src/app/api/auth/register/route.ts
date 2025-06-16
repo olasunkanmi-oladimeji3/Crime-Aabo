@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Remove password hash from response
-    const { password_hash, ...userWithoutPassword } = data
+    const { ...userWithoutPassword } = data
 
     return NextResponse.json({
       message: "Account created successfully",

@@ -47,6 +47,7 @@ export default function ReportCrimePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
+    console.log(currentLocation);
 
     // Simulate crime report submission
     await new Promise((resolve) => setTimeout(resolve, 2000))
