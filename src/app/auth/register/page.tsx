@@ -12,6 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Shield, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { signup } from "@/app/auth/action"
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -31,12 +32,29 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+    const response = await signup({
+      firstname: formData.firstName,
+      lastname: formData.lastName,
+      email: formData.email,
+      password: formData.password,
+      phone: formData.phone,
+      userType: formData.userType,
+      address: formData.address,
+      agreeToTerms: formData.agreeToTerms,
+    })
 
-    // Simulate registration process
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    if (response?.error) {
+      // Handle registration error
+      console.error("Registration failed:", response.error)
+      setIsLoading(false)
+      return
+    }
+    // Registration successful
+     router.push("/dashboard")
 
+    setIsLoading(false)
     // Redirect to dashboard after successful registration
-    router.push("/dashboard")
+   
   }
 
   const handleInputChange = (field: string, value: string | boolean) => {
@@ -113,7 +131,7 @@ export default function RegisterPage() {
                   <SelectTrigger>
                     <SelectValue placeholder="Select account type" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="max-h-60 overflow-y-auto bg-neutral-100">
                     <SelectItem value="resident">Community Resident</SelectItem>
                     <SelectItem value="vigilante">Vigilante/Security Personnel</SelectItem>
                     <SelectItem value="authority">Local Authority</SelectItem>
@@ -173,7 +191,7 @@ export default function RegisterPage() {
                 </Label>
               </div>
 
-              <Button type="submit" className="w-full" disabled={isLoading || !formData.agreeToTerms}>
+              <Button type="submit" className="w-full bg-black text-white" disabled={isLoading || !formData.agreeToTerms}>
                 {isLoading ? "Creating Account..." : "Create Account"}
               </Button>
             </form>

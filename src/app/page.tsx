@@ -28,7 +28,7 @@ export default function HomePage() {
             <Button variant="outline" asChild>
               <Link href="/auth/login">Login</Link>
             </Button>
-            <Button asChild>
+            <Button asChild className="bg-blue-600 text-white hover:bg-blue-700">
               <Link href="/auth/register">Get Started</Link>
             </Button>
           </div>
