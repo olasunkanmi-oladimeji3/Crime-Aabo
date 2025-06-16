@@ -61,7 +61,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         setIsAuthenticated(true);
 
         const { data: userInfo } = await supabase
-          .from("profiles")
+          .from("users")
           .select("*")
           .eq("id", userId)
           .single();
@@ -69,7 +69,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         if (userInfo) {
           setUser(userInfo);
         } else {
-          router.push("/auth");
+          router.push("/auth/login");
         }
       } else {
         setIsAuthenticated(false);
@@ -120,7 +120,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
 
     const { data: userInfo } = await supabase
-      .from("profiles")
+      .from("users")
       .select("*")
       .eq("id", data.user.id)
       .single();

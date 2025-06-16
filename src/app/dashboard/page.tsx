@@ -1,14 +1,33 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Shield, MapPin, AlertTriangle, Users, Phone, Eye, Plus, Bell, Settings, LogOut } from "lucide-react"
-import Link from "next/link"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Shield,
+  MapPin,
+  AlertTriangle,
+  Users,
+  Phone,
+  Eye,
+  Plus,
+  Bell,
+  Settings,
+  LogOut,
+} from "lucide-react";
+import Link from "next/link";
+import { useAuth } from "@/context/userContext";
 
 export default function DashboardPage() {
+  const { logout, isAuthenticated } = useAuth();
   const [activeIncidents] = useState([
     {
       id: 1,
@@ -34,33 +53,67 @@ export default function DashboardPage() {
       status: "Resolved",
       priority: "Low",
     },
-  ])
+  ]);
 
   const [nearbyVigilantes] = useState([
-    { id: 1, name: "John Smith", distance: "0.3 miles", status: "Available", rating: 4.8 },
-    { id: 2, name: "Sarah Johnson", distance: "0.5 miles", status: "On Duty", rating: 4.9 },
-    { id: 3, name: "Mike Davis", distance: "0.8 miles", status: "Available", rating: 4.7 },
-  ])
+    {
+      id: 1,
+      name: "John Smith",
+      distance: "0.3 miles",
+      status: "Available",
+      rating: 4.8,
+    },
+    {
+      id: 2,
+      name: "Sarah Johnson",
+      distance: "0.5 miles",
+      status: "On Duty",
+      rating: 4.9,
+    },
+    {
+      id: 3,
+      name: "Mike Davis",
+      distance: "0.8 miles",
+      status: "Available",
+      rating: 4.7,
+    },
+  ]);
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white border-b sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+           <Link href="/" className="flex items-center gap-2">
             <Shield className="h-8 w-8 text-blue-600" />
             <span className="text-2xl font-bold text-gray-900">Crime Aabo</span>
-          </div>
+          </Link>
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon">
-              <Bell className="h-5 w-5" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <Settings className="h-5 w-5" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <LogOut className="h-5 w-5" />
-            </Button>
+            {isAuthenticated ? (
+              <>
+                <Button variant="ghost" size="icon">
+                  <Bell className="h-5 w-5" />
+                </Button>
+                <Button variant="ghost" size="icon">
+                  <Settings className="h-5 w-5" />
+                </Button>
+                <Button variant="ghost" size="icon" onClick={logout}>
+                  <LogOut className="h-5 w-5" />
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="outline" asChild>
+                  <Link href="/auth/login">Login</Link>
+                </Button>
+                <Button
+                  asChild
+                  className="bg-blue-600 text-white hover:bg-blue-700"
+                >
+                  <Link href="/auth/register">Get Started</Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </header>
@@ -72,7 +125,9 @@ export default function DashboardPage() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Active Incidents</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Active Incidents
+                  </p>
                   <p className="text-3xl font-bold text-red-600">3</p>
                 </div>
                 <AlertTriangle className="h-8 w-8 text-red-500" />
@@ -84,7 +139,9 @@ export default function DashboardPage() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Available Vigilantes</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Available Vigilantes
+                  </p>
                   <p className="text-3xl font-bold text-green-600">12</p>
                 </div>
                 <Users className="h-8 w-8 text-green-500" />
@@ -96,7 +153,9 @@ export default function DashboardPage() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Response Time</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Response Time
+                  </p>
                   <p className="text-3xl font-bold text-blue-600">4.2m</p>
                 </div>
                 <MapPin className="h-8 w-8 text-blue-500" />
@@ -108,7 +167,9 @@ export default function DashboardPage() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Safety Score</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Safety Score
+                  </p>
                   <p className="text-3xl font-bold text-purple-600">8.7</p>
                 </div>
                 <Shield className="h-8 w-8 text-purple-500" />
@@ -119,17 +180,29 @@ export default function DashboardPage() {
 
         {/* Emergency Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <Button size="lg" className="h-16 bg-red-600 hover:bg-red-700" asChild>
+          <Button
+            size="lg"
+            className="h-16 bg-red-600 hover:bg-red-700"
+            asChild
+          >
             <Link href="/report-crime">
               <AlertTriangle className="h-6 w-6 mr-2" />
               Report Crime
             </Link>
           </Button>
-          <Button size="lg" variant="outline" className="h-16 border-orange-300 text-orange-600 hover:bg-orange-50">
+          <Button
+            size="lg"
+            variant="outline"
+            className="h-16 border-orange-300 text-orange-600 hover:bg-orange-50"
+          >
             <Phone className="h-6 w-6 mr-2" />
             SOS Emergency
           </Button>
-          <Button size="lg" variant="outline" className="h-16 border-blue-300 text-blue-600 hover:bg-blue-50">
+          <Button
+            size="lg"
+            variant="outline"
+            className="h-16 border-blue-300 text-blue-600 hover:bg-blue-50"
+          >
             <Eye className="h-6 w-6 mr-2" />
             Guardian Mode
           </Button>
@@ -167,8 +240,8 @@ export default function DashboardPage() {
                               incident.priority === "High"
                                 ? "destructive"
                                 : incident.priority === "Medium"
-                                  ? "default"
-                                  : "secondary"
+                                ? "default"
+                                : "secondary"
                             }
                           >
                             {incident.priority}
@@ -194,14 +267,21 @@ export default function DashboardPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Crime Hotspot Map</CardTitle>
-                <CardDescription>Interactive map showing crime incidents and hotspots in your area</CardDescription>
+                <CardDescription>
+                  Interactive map showing crime incidents and hotspots in your
+                  area
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="h-96 bg-gray-100 rounded-lg flex items-center justify-center">
                   <div className="text-center">
                     <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-600">Interactive map will be displayed here</p>
-                    <p className="text-sm text-gray-500">Showing crime incidents, hotspots, and vigilante locations</p>
+                    <p className="text-gray-600">
+                      Interactive map will be displayed here
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Showing crime incidents, hotspots, and vigilante locations
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -225,12 +305,22 @@ export default function DashboardPage() {
                         </div>
                         <div>
                           <h3 className="font-semibold">{vigilante.name}</h3>
-                          <p className="text-sm text-gray-600">{vigilante.distance} away</p>
+                          <p className="text-sm text-gray-600">
+                            {vigilante.distance} away
+                          </p>
                           <div className="flex items-center gap-2">
-                            <Badge variant={vigilante.status === "Available" ? "default" : "secondary"}>
+                            <Badge
+                              variant={
+                                vigilante.status === "Available"
+                                  ? "default"
+                                  : "secondary"
+                              }
+                            >
                               {vigilante.status}
                             </Badge>
-                            <span className="text-sm text-gray-500">★ {vigilante.rating}</span>
+                            <span className="text-sm text-gray-500">
+                              ★ {vigilante.rating}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -247,21 +337,29 @@ export default function DashboardPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Community Safety Tips</CardTitle>
-                  <CardDescription>Latest safety advice from your community</CardDescription>
+                  <CardDescription>
+                    Latest safety advice from your community
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="border-l-4 border-blue-500 pl-4">
                       <h4 className="font-semibold">Stay Alert at Night</h4>
-                      <p className="text-sm text-gray-600">Avoid walking alone after 10 PM in the downtown area</p>
+                      <p className="text-sm text-gray-600">
+                        Avoid walking alone after 10 PM in the downtown area
+                      </p>
                     </div>
                     <div className="border-l-4 border-green-500 pl-4">
                       <h4 className="font-semibold">New Security Cameras</h4>
-                      <p className="text-sm text-gray-600">Additional cameras installed on Main Street</p>
+                      <p className="text-sm text-gray-600">
+                        Additional cameras installed on Main Street
+                      </p>
                     </div>
                     <div className="border-l-4 border-orange-500 pl-4">
                       <h4 className="font-semibold">Neighborhood Watch</h4>
-                      <p className="text-sm text-gray-600">Join the weekly community patrol meetings</p>
+                      <p className="text-sm text-gray-600">
+                        Join the weekly community patrol meetings
+                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -270,7 +368,9 @@ export default function DashboardPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Anonymous Tips</CardTitle>
-                  <CardDescription>Report suspicious activities anonymously</CardDescription>
+                  <CardDescription>
+                    Report suspicious activities anonymously
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Button className="w-full mb-4">Submit Anonymous Tip</Button>
@@ -285,5 +385,5 @@ export default function DashboardPage() {
         </Tabs>
       </div>
     </div>
-  )
+  );
 }

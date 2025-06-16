@@ -1,18 +1,22 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Shield, MapPin, Users, AlertTriangle, Eye, Phone } from "lucide-react"
 import Link from "next/link"
+// import { useAuth } from "@/context/userContext"
 
 export default function HomePage() {
+  // const { user,isLoading, logout } = useAuth()
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <Shield className="h-8 w-8 text-blue-600" />
             <span className="text-2xl font-bold text-gray-900">Crime Aabo</span>
-          </div>
+          </Link>
           <nav className="hidden md:flex items-center gap-6">
             <Link href="#features" className="text-gray-600 hover:text-blue-600">
               Features

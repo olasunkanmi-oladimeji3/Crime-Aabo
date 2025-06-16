@@ -16,27 +16,28 @@ import { Label } from "@/components/ui/label";
 import { Shield, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { login } from "@/app/auth/action";
+import {useAuth}  from "@/context/userContext";
 
 export default function LoginPage() {
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+    const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    const result = await login({
-      email: formData.email,
-      password: formData.password,
-    });
+    const result = await login( formData.email,formData.password,);
+    
 
-    if (result?.error) {
+    if (result.success === false) {
       // Handle login error
-      console.error("Login failed:", result.error);
+     setError(result.message);
+        setIsLoading(false);
     } else {
       // Redirect to dashboard after successful login
       router.push("/dashboard");
@@ -67,6 +68,9 @@ export default function LoginPage() {
             <CardDescription>
               Sign in to your Crime Aabo account
             </CardDescription>
+               {error && (
+            <div className="text-red-500 text-sm text-center">{error}</div>
+          )}
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
