@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Shield, ArrowLeft, Mail, CheckCircle } from "lucide-react"
 import Link from "next/link"
+import { emailPasswordRest } from "@/app/auth/action"
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("")
@@ -20,18 +21,17 @@ export default function ForgotPasswordPage() {
     setIsLoading(true)
 
     try {
-      const response = await fetch("/api/auth/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      })
+      if (!email) {
+        alert("Please enter your email address")
+        setIsLoading(false)
+        return
+      }
+      const emailPasswordReset = await emailPasswordRest(email)
 
-      const data = await response.json()
-
-      if (response.ok) {
+      if (emailPasswordReset.success === true) {
         setIsEmailSent(true)
       } else {
-        alert(data.error || "Failed to send reset email")
+        alert(emailPasswordReset.message || "Failed to send reset email")
       }
     } catch (error) {
       console.error("Forgot password error:", error)

@@ -1,7 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { supabase } from "@/lib/supabase"
+
+import { createClient } from "@/utils/supabase/client"
 
 export async function POST(request: NextRequest) {
+    const supabase = await createClient()
   try {
     const body = await request.json()
     const {
@@ -80,6 +82,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
+    const supabase = await createClient()
   try {
     const { searchParams } = new URL(request.url)
     const status = searchParams.get("status")

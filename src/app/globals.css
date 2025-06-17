@@ -1,3 +1,15 @@
 @import "tailwindcss";
 
+.marker-crime {
+  background-color: red;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+.marker-vigilante {
+  background-color: green;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
 

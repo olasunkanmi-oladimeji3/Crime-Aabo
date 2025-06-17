@@ -1,6 +1,6 @@
 "use client";
-
-import { useState } from "react";
+import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -25,66 +25,61 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/context/userContext";
+import { createClient } from "@/utils/supabase/client";
+
+import { CrimeReport, VigilanteResponse } from "@/lib/types";
+
+const CrimeMap = dynamic(() => import("./CrimeMap"), {
+  ssr: false,
+});
+
+// type MarkerData = {
+//   id: string;
+//   lat: number;
+//   lng: number;
+//   label?: string;
+// };
 
 export default function DashboardPage() {
   const { logout, isAuthenticated } = useAuth();
-  const [activeIncidents] = useState([
-    {
-      id: 1,
-      type: "Theft",
-      location: "Main Street, Downtown",
-      time: "2 minutes ago",
-      status: "Active",
-      priority: "High",
-    },
-    {
-      id: 2,
-      type: "Suspicious Activity",
-      location: "Park Avenue",
-      time: "15 minutes ago",
-      status: "Investigating",
-      priority: "Medium",
-    },
-    {
-      id: 3,
-      type: "Vandalism",
-      location: "School District",
-      time: "1 hour ago",
-      status: "Resolved",
-      priority: "Low",
-    },
-  ]);
+  const supabase = createClient();
+  const [activeIncidents, setActiveIncidents] = useState<CrimeReport[]>([]);
+  const [nearbyVigilantes, setNearbyVigilantes] = useState<VigilanteResponse[]>([]);
 
-  const [nearbyVigilantes] = useState([
-    {
-      id: 1,
-      name: "John Smith",
-      distance: "0.3 miles",
-      status: "Available",
-      rating: 4.8,
-    },
-    {
-      id: 2,
-      name: "Sarah Johnson",
-      distance: "0.5 miles",
-      status: "On Duty",
-      rating: 4.9,
-    },
-    {
-      id: 3,
-      name: "Mike Davis",
-      distance: "0.8 miles",
-      status: "Available",
-      rating: 4.7,
-    },
-  ]);
+  useEffect(() => {
+    const getIncidents = async () => {
+      const { data: crimeReport, error: crimeError } = await supabase
+        .from("crime_reports")
+        .select("*")
+        .eq("is_ongoing", true);
+
+      if (crimeError) {
+        console.error("Error fetching crime reports:", crimeError);
+      } else {
+        setActiveIncidents(crimeReport || []);
+      }
+
+      const { data: vigilantes, error: vigilanteError } = await supabase
+        .from("vigilantes")
+        .select("*")
+        .eq("status", "Available");
+
+      if (vigilanteError) {
+        console.error("Error fetching vigilantes:", vigilanteError);
+      } else {
+        setNearbyVigilantes(vigilantes || []);
+      }
+    };
+
+    getIncidents();
+  }, [supabase]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-neutral-100">
       {/* Header */}
       <header className="bg-white border-b sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-           <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <Shield className="h-8 w-8 text-blue-600" />
             <span className="text-2xl font-bold text-gray-900">Crime Aabo</span>
           </Link>
@@ -122,13 +117,15 @@ export default function DashboardPage() {
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-6 ">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-600">
                     Active Incidents
                   </p>
-                  <p className="text-3xl font-bold text-red-600">3</p>
+                  <p className="text-3xl font-bold text-red-600">
+                    {activeIncidents.length}
+                  </p>
                 </div>
                 <AlertTriangle className="h-8 w-8 text-red-500" />
               </div>
@@ -142,7 +139,9 @@ export default function DashboardPage() {
                   <p className="text-sm font-medium text-gray-600">
                     Available Vigilantes
                   </p>
-                  <p className="text-3xl font-bold text-green-600">12</p>
+                  <p className="text-3xl font-bold text-green-600">
+                    {nearbyVigilantes.length}
+                  </p>
                 </div>
                 <Users className="h-8 w-8 text-green-500" />
               </div>
@@ -156,7 +155,7 @@ export default function DashboardPage() {
                   <p className="text-sm font-medium text-gray-600">
                     Response Time
                   </p>
-                  <p className="text-3xl font-bold text-blue-600">4.2m</p>
+                  <p className="text-3xl font-bold text-blue-600">-</p>
                 </div>
                 <MapPin className="h-8 w-8 text-blue-500" />
               </div>
@@ -170,7 +169,7 @@ export default function DashboardPage() {
                   <p className="text-sm font-medium text-gray-600">
                     Safety Score
                   </p>
-                  <p className="text-3xl font-bold text-purple-600">8.7</p>
+                  <p className="text-3xl font-bold text-purple-600">-</p>
                 </div>
                 <Shield className="h-8 w-8 text-purple-500" />
               </div>
@@ -182,7 +181,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <Button
             size="lg"
-            className="h-16 bg-red-600 hover:bg-red-700"
+            className="h-16 bg-red-600 hover:bg-red-700 text-white"
             asChild
           >
             <Link href="/report-crime">
@@ -210,15 +209,15 @@ export default function DashboardPage() {
 
         {/* Main Content */}
         <Tabs defaultValue="incidents" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-4  rounded-lg p-1 mb-6">
             <TabsTrigger value="incidents">Active Incidents</TabsTrigger>
             <TabsTrigger value="map">Crime Map</TabsTrigger>
             <TabsTrigger value="vigilantes">Vigilantes</TabsTrigger>
             <TabsTrigger value="community">Community</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="incidents" className="space-y-4">
-            <div className="flex items-center justify-between">
+          <TabsContent value="incidents">
+            <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-bold">Recent Incidents</h2>
               <Button asChild>
                 <Link href="/report-crime">
@@ -227,39 +226,47 @@ export default function DashboardPage() {
                 </Link>
               </Button>
             </div>
-
             <div className="space-y-4">
-              {activeIncidents.map((incident) => (
-                <Card key={incident.id}>
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
+              {activeIncidents.length > 0 ? (
+                activeIncidents.map((incident) => (
+                  <Card key={incident.id}>
+                    <CardContent className="p-6 flex justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
                           <Badge
                             variant={
-                              incident.priority === "High"
+                              incident.severity === "critical"
                                 ? "destructive"
-                                : incident.priority === "Medium"
+                                : incident.severity === "high"
                                 ? "default"
                                 : "secondary"
                             }
                           >
-                            {incident.priority}
+                            {incident.severity}
                           </Badge>
-                          <h3 className="font-semibold">{incident.type}</h3>
+                          <h3 className="font-semibold">
+                            {incident.crime_type}
+                          </h3>
                           <Badge variant="outline">{incident.status}</Badge>
                         </div>
                         <p className="text-gray-600 flex items-center gap-1">
                           <MapPin className="h-4 w-4" />
-                          {incident.location}
+                          {incident.location_address}
                         </p>
-                        <p className="text-sm text-gray-500">{incident.time}</p>
+                        <p className="text-sm text-gray-500">
+                          {new Date(incident.created_at).toLocaleString()}
+                        </p>
                       </div>
                       <Button variant="outline">View Details</Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                    </CardContent>
+                  </Card>
+                ))
+              ) : (
+                <div className="text-center text-gray-500 py-12">
+                  <AlertTriangle className="mx-auto h-10 w-10 text-red-400 mb-2" />
+                  <p>No active crime incidents at the moment.</p>
+                </div>
+              )}
             </div>
           </TabsContent>
 
@@ -273,17 +280,15 @@ export default function DashboardPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="h-96 bg-gray-100 rounded-lg flex items-center justify-center">
-                  <div className="text-center">
-                    <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-600">
-                      Interactive map will be displayed here
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Showing crime incidents, hotspots, and vigilante locations
-                    </p>
-                  </div>
-                </div>
+
+                <CrimeMap markers={activeIncidents.map((incident) => ({
+                  id: incident.id,
+                  lat: incident.latitude,
+                  lng: incident.longitude,
+                  type: "crime",
+                  title: incident.crime_type,
+                  description: incident.description,
+                }))} />
               </CardContent>
             </Card>
           </TabsContent>

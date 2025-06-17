@@ -14,8 +14,12 @@ import { Badge } from "@/components/ui/badge"
 import { Shield, ArrowLeft, MapPin, AlertTriangle, Upload, Phone } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { createClient } from "@/utils/supabase/client"
+import { useAuth } from "@/context/userContext"
 
 export default function ReportCrimePage() {
+  const supabase = createClient()
+  const { user } = useAuth()
   const [formData, setFormData] = useState({
     crimeType: "",
     location: "",
@@ -44,17 +48,80 @@ export default function ReportCrimePage() {
     "Other",
   ]
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    console.log(currentLocation);
+ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault()
+  setIsSubmitting(true)
 
-    // Simulate crime report submission
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+  try {
+    // Extract latitude and longitude from `currentLocation`
+    let latitude: number | null = null
+let longitude: number | null = null
 
-    // Redirect to dashboard with success message
-    router.push("/dashboard?reported=true")
+if (currentLocation) {
+  const parts = currentLocation.replace(/[^\d.,-]/g, "").split(",")
+  if (parts.length === 2) {
+    latitude = parseFloat(parts[0])
+    longitude = parseFloat(parts[1])
   }
+}
+
+if (latitude === null || longitude === null || isNaN(latitude) || isNaN(longitude)) {
+  throw new Error("Invalid or missing coordinates")
+}
+
+
+    // Upload evidence files if any
+    const evidenceInput = document.getElementById("evidence") as HTMLInputElement
+    const files = evidenceInput?.files || []
+    const evidenceUrls: string[] = []
+
+    for (const file of Array.from(files)) {
+      const filePath = `evidence/${Date.now()}-${file.name}`
+      const {  error } = await supabase.storage.from("evidence").upload(filePath, file)
+
+      if (error) {
+        console.error("Error uploading file:", file.name, error.message)
+        continue // skip failed uploads
+      }
+
+      const { data: publicUrlData } = supabase.storage.from("evidence").getPublicUrl(filePath)
+      evidenceUrls.push(publicUrlData.publicUrl)
+    }
+
+    // Prepare payload for database
+    const payload = {
+      reporter_id: user?.id, // You'll dynamically set this
+      crime_type: formData.crimeType,
+      severity: formData.severity,
+      description: formData.description,
+      location_address: formData.location,
+      latitude,
+      longitude,
+      incident_time: formData.timeOfIncident
+        ? new Date(formData.timeOfIncident).toISOString()
+        : null,
+      is_ongoing: formData.isOngoing,
+      is_anonymous: formData.isAnonymous,
+      contact_number: formData.contactNumber || null,
+      evidence_urls: evidenceUrls,
+    }
+
+    const { error: insertError } = await supabase.from("crime_reports").insert(payload)
+
+    if (insertError) {
+      console.error("Error inserting report:", insertError.message)
+      return
+    }
+
+    router.push("/dashboard?reported=true")
+  } catch (error) {
+    console.error("Submission failed:", error)
+  } finally {
+    setIsSubmitting(false)
+  }
+}
+
+
 
   const getCurrentLocation = () => {
     if (navigator.geolocation) {
@@ -99,7 +166,7 @@ export default function ReportCrimePage() {
       <div className="container mx-auto px-4 py-8 max-w-2xl">
         {/* Emergency Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-          <Button size="lg" variant="destructive" className="h-16">
+          <Button size="lg" variant="destructive" className="h-16 bg-amber-500 text-white">
             <Phone className="h-6 w-6 mr-2" />
             Call 911 (Emergency)
           </Button>
@@ -128,7 +195,7 @@ export default function ReportCrimePage() {
                   <SelectTrigger>
                     <SelectValue placeholder="Select crime type" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent  className="bg-neutral-100">
                     {crimeTypes.map((type) => (
                       <SelectItem key={type} value={type}>
                         {type}
@@ -145,7 +212,7 @@ export default function ReportCrimePage() {
                   <SelectTrigger>
                     <SelectValue placeholder="Select severity" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-neutral-100">
                     <SelectItem value="low">Low - Non-urgent</SelectItem>
                     <SelectItem value="medium">Medium - Requires attention</SelectItem>
                     <SelectItem value="high">High - Urgent response needed</SelectItem>

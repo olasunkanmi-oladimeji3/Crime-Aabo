@@ -1,9 +1,3 @@
-import { createClient } from "@supabase/supabase-js"
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 // Database types
 export interface User {
@@ -45,7 +39,9 @@ export interface VigilanteResponse {
   id: string
   crime_report_id: string
   vigilante_id: string
-  status: "notified" | "accepted" | "en_route" | "arrived" | "completed" | "declined"
+  status: "notified" | "accepted" | "en_route" | "arrived" | "completed" | "declined" | "Available"
+  name?: string
+  distance: number // distance in meters from the crime location
   response_time?: string
   arrival_time?: string
   completion_time?: string
