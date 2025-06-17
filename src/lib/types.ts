@@ -14,6 +14,9 @@ export interface User {
   is_active: boolean
   created_at: string
   updated_at: string
+  distance: number 
+   status: "notified" | "accepted" | "en_route" | "arrived" | "completed" | "declined" | "Available"
+   rating?: number
 }
 
 export interface CrimeReport {

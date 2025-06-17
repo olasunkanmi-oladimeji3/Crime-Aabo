@@ -27,7 +27,7 @@ import Link from "next/link";
 import { useAuth } from "@/context/userContext";
 import { createClient } from "@/utils/supabase/client";
 
-import { CrimeReport, VigilanteResponse } from "@/lib/types";
+import { CrimeReport, User } from "@/lib/types";
 
 const CrimeMap = dynamic(() => import("./CrimeMap"), {
   ssr: false,
@@ -44,14 +44,15 @@ export default function DashboardPage() {
   const { logout, isAuthenticated } = useAuth();
   const supabase = createClient();
   const [activeIncidents, setActiveIncidents] = useState<CrimeReport[]>([]);
-  const [nearbyVigilantes, setNearbyVigilantes] = useState<VigilanteResponse[]>([]);
+  const [nearbyVigilantes, setNearbyVigilantes] = useState<User[]>([]);
 
   useEffect(() => {
     const getIncidents = async () => {
       const { data: crimeReport, error: crimeError } = await supabase
         .from("crime_reports")
         .select("*")
-        .eq("is_ongoing", true);
+        .eq("is_ongoing", true)
+        .order("created_at", { ascending: false });
 
       if (crimeError) {
         console.error("Error fetching crime reports:", crimeError);
@@ -60,9 +61,10 @@ export default function DashboardPage() {
       }
 
       const { data: vigilantes, error: vigilanteError } = await supabase
-        .from("vigilantes")
+        .from("users")
         .select("*")
-        .eq("status", "Available");
+        .eq("user_type", "vigilante")
+        .eq("is_active", true);
 
       if (vigilanteError) {
         console.error("Error fetching vigilantes:", vigilanteError);
@@ -75,7 +77,7 @@ export default function DashboardPage() {
   }, [supabase]);
 
   return (
-    <div className="min-h-screen bg-neutral-100">
+    <div className="min-h-screen bg-gray-100 ">
       {/* Header */}
       <header className="bg-white border-b sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -309,7 +311,7 @@ export default function DashboardPage() {
                           <Users className="h-6 w-6 text-blue-600" />
                         </div>
                         <div>
-                          <h3 className="font-semibold">{vigilante.name}</h3>
+                          <h3 className="font-semibold">{vigilante.first_name}</h3>
                           <p className="text-sm text-gray-600">
                             {vigilante.distance} away
                           </p>
