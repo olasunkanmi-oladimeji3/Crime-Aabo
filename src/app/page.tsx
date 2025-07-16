@@ -267,19 +267,19 @@ export default function HomePage() {
             <Button
               size="lg"
               variant="secondary"
-              className="text-lg px-8"
+              className="text-lg px-8 bg-white text-blue-600 hover:bg-gray-100"
               asChild
             >
               <Link href="/auth/register">Sign Up Now</Link>
             </Button>
-            <Button
+            {/* <Button
               size="lg"
               variant="outline"
               className="text-lg px-8 border-white text-white hover:bg-white hover:text-blue-600"
               asChild
             >
               <Link href="/contact">Contact Us</Link>
-            </Button>
+            </Button> */}
           </div>
         </div>
       </section>
