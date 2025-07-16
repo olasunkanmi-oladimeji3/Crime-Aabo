@@ -98,7 +98,7 @@ export default function IncidentDetailPage() {
           <div className="flex items-center gap-2 text-gray-600">
             <User className="h-4 w-4" />
             <span>
-              Reported by: {incident.reported_by || "Unknown"}
+              Reported by: {incident.reported_by?.first_name || "Unknown"}
             </span>
           </div>
           <div>

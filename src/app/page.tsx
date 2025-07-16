@@ -1,9 +1,15 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Shield, MapPin, Users, AlertTriangle, Eye, Phone } from "lucide-react"
-import Link from "next/link"
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Shield, MapPin, Users, AlertTriangle, Eye, Phone } from "lucide-react";
+import Link from "next/link";
 // import { useAuth } from "@/context/userContext"
 
 export default function HomePage() {
@@ -18,13 +24,22 @@ export default function HomePage() {
             <span className="text-2xl font-bold text-gray-900">Crime Aabo</span>
           </Link>
           <nav className="hidden md:flex items-center gap-6">
-            <Link href="#features" className="text-gray-600 hover:text-blue-600">
+            <Link
+              href="#features"
+              className="text-gray-600 hover:text-blue-600"
+            >
               Features
             </Link>
-            <Link href="#how-it-works" className="text-gray-600 hover:text-blue-600">
+            <Link
+              href="#how-it-works"
+              className="text-gray-600 hover:text-blue-600"
+            >
               How It Works
             </Link>
-            <Link href="#community" className="text-gray-600 hover:text-blue-600">
+            <Link
+              href="#community"
+              className="text-gray-600 hover:text-blue-600"
+            >
               Community
             </Link>
           </nav>
@@ -32,7 +47,10 @@ export default function HomePage() {
             <Button variant="outline" asChild>
               <Link href="/auth/login">Login</Link>
             </Button>
-            <Button asChild className="bg-blue-600 text-white hover:bg-blue-700">
+            <Button
+              asChild
+              className="bg-blue-600 text-white hover:bg-blue-700"
+            >
               <Link href="/auth/register">Get Started</Link>
             </Button>
           </div>
@@ -47,14 +65,21 @@ export default function HomePage() {
             <span className="text-blue-600 block">Reimagined</span>
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Crime Aabo connects communities with real-time crime reporting, instant vigilante dispatch, and data-driven
-            security insights. Building safer neighborhoods through technology and community collaboration.
+            Crime Aabo connects communities with real-time crime reporting,
+            instant vigilante dispatch, and data-driven security insights.
+            Building safer neighborhoods through technology and community
+            collaboration.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="text-lg px-8" asChild>
               <Link href="/auth/register">Join the Community</Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8" asChild>
+            <Button
+              size="lg"
+              variant="outline"
+              className="text-lg px-8"
+              asChild
+            >
               <Link href="/dashboard">View Crime Map</Link>
             </Button>
           </div>
@@ -64,14 +89,17 @@ export default function HomePage() {
       {/* Features Section */}
       <section id="features" className="py-20 px-4 bg-white">
         <div className="container mx-auto">
-          <h2 className="text-4xl font-bold text-center text-gray-900 mb-16">Powerful Security Features</h2>
+          <h2 className="text-4xl font-bold text-center text-gray-900 mb-16">
+            Powerful Security Features
+          </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <Card className="border-2 hover:border-blue-200 transition-colors">
               <CardHeader>
                 <AlertTriangle className="h-12 w-12 text-red-500 mb-4" />
                 <CardTitle>Real-Time Crime Reporting</CardTitle>
                 <CardDescription>
-                  Report crimes instantly with location data, photos, and detailed descriptions
+                  Report crimes instantly with location data, photos, and
+                  detailed descriptions
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -89,7 +117,8 @@ export default function HomePage() {
                 <MapPin className="h-12 w-12 text-blue-500 mb-4" />
                 <CardTitle>Vigilante Dispatch System</CardTitle>
                 <CardDescription>
-                  Uber-like system connecting nearest vigilantes to crime scenes instantly
+                  Uber-like system connecting nearest vigilantes to crime scenes
+                  instantly
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -106,7 +135,10 @@ export default function HomePage() {
               <CardHeader>
                 <Eye className="h-12 w-12 text-green-500 mb-4" />
                 <CardTitle>Crime Hotspot Analysis</CardTitle>
-                <CardDescription>Data-driven insights to identify crime patterns and high-risk areas</CardDescription>
+                <CardDescription>
+                  Data-driven insights to identify crime patterns and high-risk
+                  areas
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <ul className="text-sm text-gray-600 space-y-2">
@@ -123,7 +155,8 @@ export default function HomePage() {
                 <Users className="h-12 w-12 text-purple-500 mb-4" />
                 <CardTitle>Community Engagement</CardTitle>
                 <CardDescription>
-                  Build stronger, safer communities through collaboration and transparency
+                  Build stronger, safer communities through collaboration and
+                  transparency
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -140,7 +173,10 @@ export default function HomePage() {
               <CardHeader>
                 <Phone className="h-12 w-12 text-orange-500 mb-4" />
                 <CardTitle>Emergency Features</CardTitle>
-                <CardDescription>Advanced emergency tools including SOS gestures and Guardian Mode</CardDescription>
+                <CardDescription>
+                  Advanced emergency tools including SOS gestures and Guardian
+                  Mode
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <ul className="text-sm text-gray-600 space-y-2">
@@ -156,7 +192,10 @@ export default function HomePage() {
               <CardHeader>
                 <Shield className="h-12 w-12 text-indigo-500 mb-4" />
                 <CardTitle>Privacy & Security</CardTitle>
-                <CardDescription>End-to-end encryption and privacy-first approach to community safety</CardDescription>
+                <CardDescription>
+                  End-to-end encryption and privacy-first approach to community
+                  safety
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <ul className="text-sm text-gray-600 space-y-2">
@@ -174,7 +213,9 @@ export default function HomePage() {
       {/* How It Works Section */}
       <section id="how-it-works" className="py-20 px-4 bg-gray-50">
         <div className="container mx-auto">
-          <h2 className="text-4xl font-bold text-center text-gray-900 mb-16">How Crime Aabo Works</h2>
+          <h2 className="text-4xl font-bold text-center text-gray-900 mb-16">
+            How Crime Aabo Works
+          </h2>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center">
               <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6">
@@ -182,16 +223,20 @@ export default function HomePage() {
               </div>
               <h3 className="text-xl font-semibold mb-4">Report Incident</h3>
               <p className="text-gray-600">
-                Community members report crimes or suspicious activities through the app with location and evidence
+                Community members report crimes or suspicious activities through
+                the app with location and evidence
               </p>
             </div>
             <div className="text-center">
               <div className="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6">
                 <span className="text-2xl font-bold text-green-600">2</span>
               </div>
-              <h3 className="text-xl font-semibold mb-4">Dispatch Vigilantes</h3>
+              <h3 className="text-xl font-semibold mb-4">
+                Dispatch Vigilantes
+              </h3>
               <p className="text-gray-600">
-                System automatically notifies nearest available vigilantes with incident details and navigation
+                System automatically notifies nearest available vigilantes with
+                incident details and navigation
               </p>
             </div>
             <div className="text-center">
@@ -200,7 +245,8 @@ export default function HomePage() {
               </div>
               <h3 className="text-xl font-semibold mb-4">Analyze & Improve</h3>
               <p className="text-gray-600">
-                Data is analyzed to identify patterns, create hotspot maps, and improve community security strategies
+                Data is analyzed to identify patterns, create hotspot maps, and
+                improve community security strategies
               </p>
             </div>
           </div>
@@ -210,12 +256,20 @@ export default function HomePage() {
       {/* CTA Section */}
       <section className="py-20 px-4 bg-blue-600 text-white">
         <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-6">Ready to Make Your Community Safer?</h2>
+          <h2 className="text-4xl font-bold mb-6">
+            Ready to Make Your Community Safer?
+          </h2>
           <p className="text-xl mb-8 opacity-90">
-            Join thousands of community members already using Crime Aabo to build safer neighborhoods
+            Join thousands of community members already using Crime Aabo to
+            build safer neighborhoods
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="secondary" className="text-lg px-8" asChild>
+            <Button
+              size="lg"
+              variant="secondary"
+              className="text-lg px-8"
+              asChild
+            >
               <Link href="/auth/register">Sign Up Now</Link>
             </Button>
             <Button
@@ -231,80 +285,40 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 px-4">
+      <footer className="bg-gray-900 text-white py-12 px-4 flex justify-between items-center">
         <div className="container mx-auto">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <Shield className="h-6 w-6" />
-                <span className="text-xl font-bold">Crime Aabo</span>
+          <div className="w-full flex justify-center px-4">
+            <div className="grid md:grid-cols-2 gap-8 text-center items-center max-w-4xl w-full">
+              <div>
+                <div className="flex justify-center items-center gap-2 mb-4">
+                  <Shield className="h-6 w-6" />
+                  <span className="text-xl font-bold">Crime Aabo</span>
+                </div>
+                <p className="text-gray-400">
+                  Building safer communities through technology and
+                  collaboration.
+                </p>
               </div>
-              <p className="text-gray-400">Building safer communities through technology and collaboration.</p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Features</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Crime Reporting
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Vigilante Dispatch
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Hotspot Analysis
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Community Tools
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Support</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Help Center
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Safety Guidelines
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Privacy Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Terms of Service
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Contact</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li>Emergency: 911</li>
-                <li>Support: help@crimeaabo.com</li>
-                <li>Community: community@crimeaabo.com</li>
-              </ul>
+
+              <div>
+                <h3 className="font-semibold mb-4">Contact</h3>
+                <ul className="space-y-2 text-gray-400">
+                  <li>Emergency: 911</li>
+                  <li>Support: help@crimeaabo.com</li>
+                  <li>Community: community@crimeaabo.com</li>
+                </ul>
+              </div>
             </div>
           </div>
+
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 Crime Aabo. All rights reserved. Building safer communities together.</p>
+            <p>
+              &copy; 2024 Crime Aabo. All rights reserved. Building safer
+              communities together.
+            </p>
           </div>
         </div>
       </footer>
     </div>
-  )
+  );
 }

@@ -36,6 +36,7 @@ export interface CrimeReport {
   evidence_urls?: string[]
   created_at: string
   updated_at: string
+  reported_by:User | null // User who reported the crime, can be null if anonymous
 }
 
 export interface VigilanteResponse {
